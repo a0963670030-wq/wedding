@@ -519,7 +519,6 @@
           action="https://docs.google.com/forms/d/e/1FAIpQLSeVlA0VXHgR0b1vNX7n12qaVeMCCE-qY5yEl5V_wxgLQzDAeA/formResponse" 
           method="POST" 
           target="hidden_iframe"
-          onsubmit="return handleFormSubmit(event);"
           class="space-y-6"
         >
 
@@ -602,11 +601,12 @@
             <p class="text-[11px] text-morandi-taupe/70 mt-1">例如：特別的飲食（素食/禁忌）、兒童椅、給新人的祝福等</p>
           </div>
 
-          <!-- 提交按鈕 -->
+          <!-- 提交按鈕：改為 type="button" 由 JS 進行嚴格單次調度，避免原生表單二次 submit -->
           <div class="pt-2">
             <button 
-              type="submit" 
+              type="button" 
               id="submit-btn"
+              onclick="executeSingleSubmit()"
               class="w-full py-3.5 px-6 rounded-xl bg-morandi-warm text-white font-medium text-sm tracking-widest hover:bg-[#c29162] transition duration-300 shadow-md hover:shadow-lg focus:outline-none flex items-center justify-center gap-2"
             >
               <span id="btn-text">確認送出回函</span>
@@ -767,29 +767,52 @@
       slideInterval = setInterval(nextSlide, 4500);
     }
 
-    // 4. Google 表單隱藏式 Iframe 提交機制 (單一管道傳送，杜絕重複寫入)
-    function handleFormSubmit(event) {
+    // 4. 嚴格防重送之單次提交機制 (Mutex 鎖定 + 手動 submit)
+    let isSubmitting = false;
+
+    function executeSingleSubmit() {
+      // 若正在提交中，堅決擋下後續任何點擊
+      if (isSubmitting) return;
+
+      const form = document.getElementById('wedding-form');
       const name = document.getElementById('guest_name').value.trim();
       const relation = document.getElementById('relationship').value;
       const count = document.getElementById('attendance_count').value;
       const requests = document.getElementById('special_requests').value.trim();
 
-      if (!name || !relation || count === "" || !requests) {
-        return false;
+      // 原生表單欄位驗證
+      if (!name) {
+        document.getElementById('guest_name').focus();
+        return;
+      }
+      if (!relation) {
+        document.getElementById('relationship').focus();
+        return;
+      }
+      if (count === "") {
+        document.getElementById('attendance_count').focus();
+        return;
+      }
+      if (!requests) {
+        document.getElementById('special_requests').focus();
+        return;
       }
 
-      // 標記已送出，並啟動按鈕載入動畫
+      // 立刻鎖死開關，並切換按鈕狀態
+      isSubmitting = true;
       window.submitted = true;
+
       const submitBtn = document.getElementById('submit-btn');
       const btnText = document.getElementById('btn-text');
       const btnSpinner = document.getElementById('btn-spinner');
-      
+
       submitBtn.disabled = true;
+      submitBtn.classList.add('opacity-75', 'cursor-not-allowed');
       btnText.innerText = '傳送回函中...';
       btnSpinner.classList.remove('hidden');
 
-      // 透過 form target="hidden_iframe" 原生單次送出即可，不再額外調用 fetch()
-      return true;
+      // 嚴格僅執行唯一一次提交至 hidden_iframe
+      form.submit();
     }
 
     function onFormSubmitSuccess() {
@@ -805,7 +828,7 @@
       successBox.classList.remove('hidden');
 
       form.reset();
-      window.submitted = false; // 重設送出狀態
+      window.submitted = false;
       successBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
   </script>
