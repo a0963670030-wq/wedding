@@ -96,10 +96,10 @@
     /* 火漆封蠟章呼吸燈效果 */
     @keyframes seal-pulse {
       0%, 100% {
-        box-shadow: 0 4px 14px rgba(0,0,0,0.22), 0 0 0 0 rgba(212, 163, 115, 0.5);
+        box-shadow: 0 4px 14px rgba(0,0,0,0.3), 0 0 0 0 rgba(223, 193, 157, 0.6);
       }
       50% {
-        box-shadow: 0 6px 20px rgba(0,0,0,0.28), 0 0 0 10px rgba(212, 163, 115, 0);
+        box-shadow: 0 6px 22px rgba(0,0,0,0.4), 0 0 0 12px rgba(223, 193, 157, 0);
       }
     }
     .wax-seal-glow {
@@ -123,16 +123,16 @@
   </audio>
 
   <!-- ========================================== -->
-  <!-- 開函儀式感互動遮罩 (現代化擬真杏色信封) -->
+  <!-- 開函儀式感互動遮罩 (優化文字為高對比柔白與香檳金) -->
   <!-- ========================================== -->
-  <div id="intro-overlay" class="fixed inset-0 z-50 flex items-center justify-center bg-[#F5F2EB]/98 backdrop-blur-md px-4 transition-all duration-1000">
+  <div id="intro-overlay" class="fixed inset-0 z-50 flex items-center justify-center bg-black/65 backdrop-blur-xl px-4 transition-all duration-1000">
     <div class="w-full max-w-sm flex flex-col items-center select-none">
       
-      <!-- 頂部引言 -->
-      <div class="text-center mb-7 space-y-1.5">
-        <p class="font-cormorant tracking-[0.35em] text-xs uppercase text-morandi-taupe">Wedding Invitation</p>
-        <p class="font-serifTc text-xs text-morandi-dark/70 tracking-widest font-light">誠摯邀請您參與我們的婚禮</p>
-        <h2 class="font-cormorant italic text-2xl text-morandi-dark tracking-wider pt-1">Yuren & Yajing</h2>
+      <!-- 頂部引言 (純白與香檳金，清晰明亮) -->
+      <div class="text-center mb-7 space-y-1.5 drop-shadow-md">
+        <p class="font-cormorant tracking-[0.35em] text-xs uppercase text-[#DFC19D] font-medium">Wedding Invitation</p>
+        <p class="font-serifTc text-xs text-white/90 tracking-widest font-light">誠摯邀請您參與我們的婚禮</p>
+        <h2 class="font-cormorant italic text-3xl text-white tracking-wider pt-1 font-normal">Yuren & Yajing</h2>
       </div>
 
       <!-- 立體信封本體 -->
@@ -142,9 +142,9 @@
         <div class="absolute inset-0 bg-[#decbb6] rounded-2xl shadow-2xl border border-[#cbb39b]/40"></div>
 
         <!-- 內置邀請函卡片 (點擊前完全隱蔽，點擊後緩慢抽出並放大) -->
-        <div id="inner-card" class="envelope-card absolute inset-x-3.5 top-3.5 bottom-3.5 bg-[#FCFAF7] rounded-xl p-5 shadow-xl border border-morandi-warm/30 flex flex-col items-center justify-center text-center">
-          <div class="w-full h-full border border-morandi-warm/35 rounded-lg p-4 flex flex-col items-center justify-center space-y-2 bg-gradient-to-b from-white/80 to-[#FAF7F0]/90">
-            <span class="font-cormorant text-[11px] tracking-[0.3em] text-morandi-warm uppercase font-medium">Heartfelt Invitation</span>
+        <div id="inner-card" class="envelope-card absolute inset-x-3.5 top-3.5 bottom-3.5 bg-[#FCFAF7] rounded-xl p-5 shadow-2xl border border-morandi-warm/30 flex flex-col items-center justify-center text-center">
+          <div class="w-full h-full border border-morandi-warm/35 rounded-lg p-4 flex flex-col items-center justify-center space-y-2 bg-gradient-to-b from-white/95 to-[#FAF7F0]">
+            <span class="font-cormorant text-[11px] tracking-[0.3em] text-[#C08C5D] uppercase font-medium">Heartfelt Invitation</span>
             <p class="font-serifTc text-sm font-medium text-morandi-dark tracking-widest">愛的下一頁，與我們一起見證</p>
             <div class="w-8 h-[1px] bg-morandi-warm/40 my-1"></div>
             <p class="font-cormorant italic text-xs text-morandi-taupe">YUREN FU & YAJING YE</p>
@@ -166,7 +166,7 @@
         </div>
 
         <!-- 實體擬真古銅金火漆封蠟章 -->
-        <div id="wax-seal" class="absolute top-[56%] left-1/2 -translate-x-1/2 -translate-y-1/2 z-40 wax-seal-glow w-15 h-15 rounded-full bg-gradient-to-br from-[#c9955e] via-[#b37a44] to-[#82542a] p-1 flex items-center justify-center transition-transform duration-300 group-hover:scale-105 shadow-xl border-2 border-[#e6b885]/40">
+        <div id="wax-seal" class="absolute top-[56%] left-1/2 -translate-x-1/2 -translate-y-1/2 z-40 wax-seal-glow w-15 h-15 rounded-full bg-gradient-to-br from-[#c9955e] via-[#b37a44] to-[#82542a] p-1 flex items-center justify-center transition-transform duration-300 group-hover:scale-105 shadow-2xl border-2 border-[#e6b885]/50">
           <div class="w-full h-full rounded-full border border-[#f3d1a8]/60 flex flex-col items-center justify-center text-center bg-gradient-to-tr from-[#9c6936] to-[#c28c52] shadow-inner p-1">
             <svg class="w-3.5 h-3.5 text-[#ffebd4]/80 -mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582"></path>
@@ -177,12 +177,12 @@
 
       </div>
 
-      <!-- 底部輕觸提示 -->
-      <div class="mt-8 flex flex-col items-center space-y-1 animate-pulse">
-        <p class="font-cormorant text-xs tracking-[0.28em] text-morandi-taupe uppercase">Tap Seal To Open</p>
-        <p class="font-serifTc text-xs text-morandi-dark/80 tracking-widest flex items-center gap-1.5">
+      <!-- 底部輕觸提示 (亮白高對比 + 金色光點，清晰吸睛) -->
+      <div class="mt-8 flex flex-col items-center space-y-1 animate-pulse drop-shadow-md">
+        <p class="font-cormorant text-xs tracking-[0.28em] text-[#DFC19D] uppercase font-medium">Tap Seal To Open</p>
+        <p class="font-serifTc text-xs text-white tracking-widest flex items-center gap-1.5 font-light">
           <span>輕觸封蠟開啟喜帖</span>
-          <svg class="w-3 h-3 text-morandi-warm" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 1.414L10.586 9H7a1 1 0 100 2h3.586l-1.293 1.293a1 1 0 101.414 1.414l3-3a1 1 0 000-1.414z"/></svg>
+          <svg class="w-3 h-3 text-[#DFC19D]" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 1.414L10.586 9H7a1 1 0 100 2h3.586l-1.293 1.293a1 1 0 101.414 1.414l3-3a1 1 0 000-1.414z"/></svg>
         </p>
       </div>
 
@@ -519,7 +519,7 @@
           action="https://docs.google.com/forms/d/e/1FAIpQLSeVlA0VXHgR0b1vNX7n12qaVeMCCE-qY5yEl5V_wxgLQzDAeA/formResponse" 
           method="POST" 
           target="hidden_iframe"
-          onsubmit="return validateAndSubmit(event);"
+          onsubmit="return handleFormSubmit(event);"
           class="space-y-6"
         >
 
@@ -768,7 +768,7 @@
     }
 
     // 4. Google 表單隱藏式 Iframe 提交機制
-    function validateAndSubmit(event) {
+    function handleFormSubmit(event) {
       const name = document.getElementById('guest_name').value.trim();
       const relation = document.getElementById('relationship').value;
       const count = document.getElementById('attendance_count').value;
@@ -786,6 +786,24 @@
       submitBtn.disabled = true;
       btnText.innerText = '傳送回函中...';
       btnSpinner.classList.remove('hidden');
+
+      // 雙重保險：同時透過 FormData 背景直接 post 給 Google Form
+      const formData = new FormData();
+      formData.append('entry.930925764', name);
+      formData.append('entry.965536727', relation);
+      formData.append('entry.737757247', count);
+      formData.append('entry.1860876734', requests);
+
+      fetch('https://docs.google.com/forms/d/e/1FAIpQLSeVlA0VXHgR0b1vNX7n12qaVeMCCE-qY5yEl5V_wxgLQzDAeA/formResponse', {
+        method: 'POST',
+        mode: 'no-cors',
+        body: formData
+      }).then(() => {
+        onFormSubmitSuccess();
+      }).catch(() => {
+        // 如果 fetch 被擋，仍有 target="hidden_iframe" 兜底
+        setTimeout(onFormSubmitSuccess, 1000);
+      });
 
       return true;
     }
