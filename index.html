@@ -190,7 +190,7 @@
   </div>
 
   <!-- ========================================== -->
-  <!-- 頂部固定導覽列 (如同原版截圖) -->
+  <!-- 頂部固定導覽列 -->
   <!-- ========================================== -->
   <nav class="fixed top-0 inset-x-0 z-30 bg-[#F4F1EA]/90 backdrop-blur-md border-b border-morandi-sand/40 px-4 sm:px-8 py-3.5 flex items-center justify-between transition-all duration-300">
     <!-- 左側新郎新娘品牌字樣 -->
@@ -222,7 +222,6 @@
   <!-- 常駐背景音樂播放按鈕 (截圖中圓角白色膠囊樣式) -->
   <!-- ========================================== -->
   <div id="music-disc-btn" onclick="toggleAudio()" class="fixed bottom-6 right-5 sm:right-7 z-40 cursor-pointer flex items-center gap-2.5 bg-white/95 backdrop-blur-md px-3.5 py-2 rounded-full shadow-lg border border-black/5 hover:scale-105 transition-all duration-300">
-    <!-- 圓形香檳金音符/靜音指示圓圈 -->
     <div class="w-7 h-7 rounded-full bg-[#C99867] text-white flex items-center justify-center shrink-0">
       <svg id="music-playing-icon" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path>
@@ -232,12 +231,11 @@
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2"></path>
       </svg>
     </div>
-    <!-- 播放文字狀態 -->
     <span id="music-status-text" class="text-xs text-morandi-dark/80 tracking-wider select-none font-medium pr-1">音樂播放中</span>
   </div>
 
   <!-- ========================================== -->
-  <!-- 頁首 HERO 區域 (完全還原截圖視覺架構) -->
+  <!-- 頁首 HERO 區域 -->
   <!-- ========================================== -->
   <header class="relative w-full min-h-screen pt-20 pb-16 flex items-center justify-center text-white overflow-hidden">
     <!-- 高清封面背景 -->
@@ -246,10 +244,10 @@
       style="background-image: url('https://lh3.googleusercontent.com/d/18vuJz_o7W1Oay3QqiO5FVXf8KdiwCUr2');"
     ></div>
 
-    <!-- 柔和微光漸層遮罩 (保留通透空氣感與清晰字體層次) -->
+    <!-- 柔和微光漸層遮罩 -->
     <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/60"></div>
 
-    <!-- 封面主視覺內容排版 (1:1 還原截圖) -->
+    <!-- 封面主視覺內容排版 -->
     <div class="relative z-10 w-full max-w-xl mx-auto px-4 text-center flex flex-col items-center">
       
       <!-- 頂部英文引言 (大寫寬字距) -->
@@ -276,7 +274,7 @@
         愛的下一頁，與我們一起見證
       </p>
 
-      <!-- 半透明磨砂深色橢圓資訊膠囊 (還原截圖重點) -->
+      <!-- 半透明磨砂深色橢圓資訊膠囊 -->
       <div class="w-full max-w-xs sm:max-w-sm rounded-[36px] bg-black/45 backdrop-blur-md border border-white/20 px-6 py-5 shadow-2xl text-center space-y-1.5 mb-8">
         <p class="font-serifTc text-sm sm:text-base font-normal tracking-widest text-white/95">
           2026 年 11 月 22 日（日）
@@ -289,7 +287,7 @@
         </p>
       </div>
 
-      <!-- 截圖底部雙按鈕組 (填寫出席回函 / 查看婚禮資訊) -->
+      <!-- 底部雙按鈕組 (填寫出席回函 / 查看婚禮資訊) -->
       <div class="flex items-center justify-center gap-3 sm:gap-4 w-full max-w-sm">
         <a 
           href="#rsvp-section" 
@@ -359,7 +357,7 @@
       <div class="w-12 h-[1px] bg-morandi-taupe/40 mx-auto mt-4"></div>
     </div>
 
-    <!-- 輪播主相框 (保證黃金人像比例，防止拉伸) -->
+    <!-- 輪播主相框 -->
     <div class="max-w-md mx-auto relative group">
       <div class="relative w-full aspect-[2/3] sm:aspect-[3/4] rounded-2xl overflow-hidden shadow-xl border-4 border-white bg-morandi-sand/20">
         
@@ -451,7 +449,7 @@
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <!-- 時間卡片 -->
+        <!-- 時間卡片 (已移除重疊的入席時間) -->
         <div class="bg-white/90 rounded-2xl p-6 sm:p-8 shadow-sm border border-morandi-sand/60 flex flex-col justify-between">
           <div>
             <div class="w-10 h-10 rounded-full bg-morandi-sandlight flex items-center justify-center text-morandi-sagedark mb-4">
