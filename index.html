@@ -88,8 +88,18 @@
       max-width: 440px;
       margin: 0 auto;
       aspect-ratio: 2 / 3;
+      height: auto;
+      min-height: 0;
     }
     
+    /* 確保輪播與所有圖片維持完美原圖比例，不拉伸不壓扁 */
+    .slide-stage img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+
     /* 輸入框聚焦細緻光暈 */
     .form-input-focus:focus {
       border-color: #d4a373;
@@ -327,13 +337,24 @@
         YOU ARE MY GREATEST ADVENTURE
       </p>
 
-      <!-- 大氣新人英文姓名 -->
-      <h1 class="font-cormorant font-normal text-3xl sm:text-5xl md:text-6xl tracking-[0.18em] sm:tracking-[0.22em] text-white leading-tight drop-shadow-md">
-        Yuren Fu <span class="italic font-light text-morandi-warm/90 text-2xl sm:text-4xl mx-1">&</span> Yajing Ye
-      </h1>
+      <!-- 大氣新人英文與中文姓名（優雅交融無違和排版） -->
+      <div class="space-y-2">
+        <h1 class="font-cormorant font-normal text-3xl sm:text-5xl md:text-6xl tracking-[0.16em] sm:tracking-[0.2em] text-white leading-tight drop-shadow-md">
+          Yuren Fu <span class="italic font-light text-morandi-warm text-2xl sm:text-4xl mx-1.5">&</span> Yajing Ye
+        </h1>
+        
+        <!-- 精緻中文姓名伴隨飾線：傅裕仁 & 葉雅靜 -->
+        <div class="inline-flex items-center justify-center gap-3 pt-1">
+          <div class="w-6 sm:w-10 h-px bg-morandi-warm/70"></div>
+          <span class="text-sm sm:text-lg tracking-[0.3em] font-light text-white/95 drop-shadow-sm font-serifTc">
+            傅裕仁 <span class="text-morandi-warm/90 mx-1 font-light">&</span> 葉雅靜
+          </span>
+          <div class="w-6 sm:w-10 h-px bg-morandi-warm/70"></div>
+        </div>
+      </div>
 
       <!-- 中文靈魂標語 -->
-      <p class="text-xs sm:text-base tracking-[0.32em] font-light text-white/95 max-w-xl mx-auto drop-shadow-sm">
+      <p class="text-xs sm:text-base tracking-[0.32em] font-light text-white/90 max-w-xl mx-auto drop-shadow-sm pt-1">
         愛的下一頁，與我們一起見證
       </p>
 
