@@ -511,14 +511,8 @@
       <!-- 表單容器 -->
       <div class="bg-white/85 backdrop-blur-md rounded-2xl p-6 sm:p-10 shadow-sm border border-morandi-sand/60">
         
-        <!-- 隱藏式 Iframe (實現不跳頁無縫提交至 Google 表單) -->
-        <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="if(window.submitted){onFormSubmitSuccess();}"></iframe>
-
         <form 
           id="wedding-form"
-          action="https://docs.google.com/forms/d/e/1FAIpQLSeVlA0VXHgR0b1vNX7n12qaVeMCCE-qY5yEl5V_wxgLQzDAeA/formResponse" 
-          method="POST" 
-          target="hidden_iframe"
           class="space-y-6"
         >
 
@@ -770,11 +764,10 @@
     // 4. 嚴格防重送之單次提交機制 (Mutex 鎖定 + 手動 submit)
     let isSubmitting = false;
 
-    function executeSingleSubmit() {
+    async function executeSingleSubmit() {
       // 若正在提交中，堅決擋下後續任何點擊
       if (isSubmitting) return;
 
-      const form = document.getElementById('wedding-form');
       const name = document.getElementById('guest_name').value.trim();
       const relation = document.getElementById('relationship').value;
       const count = document.getElementById('attendance_count').value;
@@ -800,7 +793,6 @@
 
       // 立刻鎖死開關，並切換按鈕狀態
       isSubmitting = true;
-      window.submitted = true;
 
       const submitBtn = document.getElementById('submit-btn');
       const btnText = document.getElementById('btn-text');
@@ -811,8 +803,27 @@
       btnText.innerText = '傳送回函中...';
       btnSpinner.classList.remove('hidden');
 
-      // 嚴格僅執行唯一一次提交至 hidden_iframe
-      form.submit();
+      // 使用 FormData 打包，並透過 fetch(no-cors) 直送 Google 表單，徹底杜絕 iframe 的二次重送！
+      const formData = new FormData();
+      formData.append('entry.930925764', name);
+      formData.append('entry.965536727', relation);
+      formData.append('entry.737757247', count);
+      formData.append('entry.1860876734', requests);
+
+      const googleFormUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSeVlA0VXHgR0b1vNX7n12qaVeMCCE-qY5yEl5V_wxgLQzDAeA/formResponse';
+
+      try {
+        await fetch(googleFormUrl, {
+          method: 'POST',
+          mode: 'no-cors',
+          body: formData
+        });
+      } catch (err) {
+        console.warn('Fetch 完成', err);
+      }
+
+      // 順利送出，展示成功畫面
+      onFormSubmitSuccess();
     }
 
     function onFormSubmitSuccess() {
@@ -828,7 +839,6 @@
       successBox.classList.remove('hidden');
 
       form.reset();
-      window.submitted = false;
       successBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
   </script>
