@@ -895,23 +895,38 @@
       } catch (e) {}
     }
 
-    // 鋼琴背景音量平滑調整器 (保證 iOS 不被中斷)
-    function setAudioVolumeSmoothly(targetVolume, durationMs = 800) {
+    // 寫完字後，音樂從頭開始順暢播放 (還原為測試完全正常的穩定版本)
+    function startWeddingMusicWithFadeIn() {
       const bgAudio = document.getElementById('wedding-audio');
-      if (!bgAudio) return;
-      
-      const startVolume = bgAudio.volume;
-      const startTime = performance.now();
+      const musicDiscInner = document.getElementById('music-disc-inner');
+      const musicStatusText = document.getElementById('music-status-text');
+      const playingIcon = document.getElementById('music-playing-icon');
+      const mutedIcon = document.getElementById('music-muted-icon');
 
-      function step(currentTime) {
-        const elapsed = currentTime - startTime;
-        const progress = Math.min(elapsed / durationMs, 1);
-        bgAudio.volume = startVolume + (targetVolume - startVolume) * progress;
-        if (progress < 1) {
-          requestAnimationFrame(step);
+      if (!bgAudio) return;
+
+      try {
+        bgAudio.muted = false;
+        bgAudio.volume = 1.0;
+        try {
+          bgAudio.currentTime = 0;
+        } catch (e) {}
+
+        const playPromise = bgAudio.play();
+        if (playPromise !== undefined) {
+          playPromise.then(() => {
+            if (musicDiscInner) musicDiscInner.classList.add('animate-spin-slow');
+            if (musicStatusText) musicStatusText.innerText = '音樂播放中';
+            if (playingIcon) playingIcon.classList.remove('hidden');
+            if (mutedIcon) mutedIcon.classList.add('hidden');
+          }).catch(e => {
+            console.warn('播放被攔截，可由右下角手動開啟:', e);
+            if (musicStatusText) musicStatusText.innerText = '點擊播放音樂';
+          });
         }
+      } catch (e) {
+        console.warn('啟動音樂錯誤:', e);
       }
-      requestAnimationFrame(step);
     }
 
     // 1. 開函儀式與清秀硬筆手寫書寫動畫
@@ -924,27 +939,14 @@
       // 1. 喚醒 Web Audio（用於抽紙聲與寫字聲）
       initAudioContext();
 
-      // 2. 解決 iOS 時好時壞：點擊手指碰觸的當下，以微音量 0.05 立即 play()，絕不暫停，建立不可撤銷的音訊串流！
+      // 2. 利用 iOS 允許的 muted = true 在點擊瞬間取得合法播放權限
       const bgAudio = document.getElementById('wedding-audio');
-      const musicDiscInner = document.getElementById('music-disc-inner');
-      const musicStatusText = document.getElementById('music-status-text');
-      const playingIcon = document.getElementById('music-playing-icon');
-      const mutedIcon = document.getElementById('music-muted-icon');
-
       if (bgAudio) {
         try {
-          bgAudio.muted = false;
-          bgAudio.volume = 0.05; // 寫字期間微弱存在，絕不引起系統靜音處罰
+          bgAudio.muted = true;
           const p = bgAudio.play();
           if (p !== undefined) {
-            p.then(() => {
-              if (musicDiscInner) musicDiscInner.classList.add('animate-spin-slow');
-              if (musicStatusText) musicStatusText.innerText = '音樂播放中';
-              if (playingIcon) playingIcon.classList.remove('hidden');
-              if (mutedIcon) mutedIcon.classList.add('hidden');
-            }).catch(err => {
-              console.warn('iOS 啟動提示:', err);
-            });
+            p.catch(err => console.warn('iOS 預授權提示:', err));
           }
         } catch (err) {}
       }
@@ -967,8 +969,8 @@
       // 卡片到位後開始手寫
       setTimeout(() => {
         startPenHandwriting(() => {
-          // 文字題畢：將背景音樂從微音量平滑放大至 1.0 全音量！
-          setAudioVolumeSmoothly(1.0, 1000);
+          // 文字題畢收筆後，解除靜音，音樂從頭響起！
+          startWeddingMusicWithFadeIn();
 
           // 新郎新娘姓名自然淡入
           const coupleInfo = document.getElementById('card-couple-info');
