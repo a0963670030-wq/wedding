@@ -2,7 +2,7 @@
 <html lang="zh-TW" class="scroll-smooth">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>傅裕仁 & 葉雅靜 婚禮邀請函 | Wedding Invitation</title>
   
   <!-- Tailwind CSS CDN -->
@@ -14,7 +14,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Klee+One:wght@400;600&family=Noto+Serif+TC:wght@300;400;500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
   
   <style>
-    /* 引入截圖同款清新文青硬筆手寫字型 (口力口體/辰宇落雁手寫體) */
+    /* 引入清新硬筆手寫字型 (辰宇落雁手寫體) */
     @font-face {
       font-family: 'ChenYuluoyan';
       src: url('https://cdn.jsdelivr.net/gh/Chenyu-otf/chenyuluoyan_thin@main/ChenYuluoyan-2.0-Thin.ttf') format('truetype');
@@ -57,9 +57,10 @@
       background-color: #FAF8F5;
       color: #2E302D;
       overflow-x: hidden;
+      -webkit-tap-highlight-color: transparent;
     }
 
-    /* 硬筆手寫專用字體樣式 (辰宇落雁/口力口手寫風格) */
+    /* 硬筆手寫專用字體樣式 */
     .font-handwriting {
       font-family: 'ChenYuluoyan', 'Klee One', 'Noto Serif TC', cursive, serif;
     }
@@ -79,14 +80,14 @@
       z-index: 10;
     }
 
-    /* 火漆章點擊時破拆彈出動效 */
+    /* 火漆章點擊破拆動效 */
     .wax-seal-burst {
-      transform: translate(-50%, -50%) scale(1.12) !important;
+      transform: translate(-50%, -50%) scale(1.15) !important;
       opacity: 0 !important;
-      transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.5s ease-out !important;
+      transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.4s ease-out !important;
     }
 
-    /* 邀請內卡向上抽出並置中放大 (放慢並賦予優雅從容滑出感) */
+    /* 邀請內卡向上抽出 */
     .envelope-card {
       opacity: 0;
       visibility: hidden;
@@ -103,7 +104,7 @@
       z-index: 45;
     }
 
-    /* 硬筆手寫書寫展示區 (清秀字體、排列適中、絕不溢出) */
+    /* 手寫書寫展示區 */
     .handwriting-writing-wrapper {
       position: relative;
       display: inline-flex;
@@ -115,7 +116,6 @@
       letter-spacing: 0.14em;
     }
 
-    /* 單個手寫字體的動畫遮罩容器 */
     .hw-char-span {
       position: relative;
       display: inline-block;
@@ -139,7 +139,7 @@
       transform: translateY(0) scale(1);
     }
 
-    /* 隨筆鋒游移的金色鋼筆尖/墨點游標 */
+    /* 金色鋼筆尖游標 */
     #writing-cursor-dot {
       position: absolute;
       width: 5px;
@@ -159,10 +159,9 @@
       opacity: 0;
       transform: scale(1.03);
       pointer-events: none;
-      transition: opacity 1.4s cubic-bezier(0.4, 0, 0.2, 1), transform 1.4s ease-out;
+      transition: opacity 1.3s cubic-bezier(0.4, 0, 0.2, 1), transform 1.3s ease-out;
     }
 
-    /* 新人姓名慢速自然浮現樣式 */
     .couple-info-reveal {
       opacity: 1 !important;
       transform: translateY(0) !important;
@@ -181,15 +180,15 @@
       animation: seal-pulse 2.6s infinite ease-in-out;
     }
 
-    /* 文字防背景干擾的高雅微光光暈 */
+    /* 文字微光光暈 */
     .text-aura-strong {
-      text-shadow: 0 2px 14px rgba(0, 0, 0, 0.85), 0 0 25px rgba(0, 0, 0, 0.6);
+      text-shadow: 0 2px 14px rgba(0, 0, 0, 0.9), 0 0 25px rgba(0, 0, 0, 0.7);
     }
     .text-aura {
-      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.75), 0 0 20px rgba(0, 0, 0, 0.45);
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 0, 0, 0.5);
     }
 
-    /* 旋轉慢速動效 (黑膠唱片) */
+    /* 旋轉慢速動效 */
     @keyframes spin-slow {
       from { transform: rotate(0deg); }
       to { transform: rotate(360deg); }
@@ -198,17 +197,22 @@
       animation: spin-slow 8s linear infinite;
     }
 
-    /* 高級感電影鏡頭微推效果 (Ken Burns Effect) */
-    @keyframes ken-burns {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.05); }
-      100% { transform: scale(1); }
+    /* 手機直立螢幕極致優化：露出更多新人畫面，不裁切人物兩側 */
+    .hero-bg-photo {
+      background-image: url('https://lh3.googleusercontent.com/d/18vuJz_o7W1Oay3QqiO5FVXf8KdiwCUr2');
+      background-repeat: no-repeat;
+      background-position: center 20%;
+      background-size: cover;
     }
-    .animate-ken-burns {
-      animation: ken-burns 22s ease-in-out infinite;
+    @media (max-width: 640px) {
+      .hero-bg-photo {
+        /* 手機直螢幕讓寬度完全舒展，聚焦於兩人牽手的中央偏上方視覺黃金點 */
+        background-position: center 28%;
+        background-size: 165% auto;
+      }
     }
 
-    /* 按鈕優雅珍珠微光掠過動畫 (Shimmer Effect) */
+    /* 按鈕珍珠微光掠過動畫 (Shimmer Effect) */
     @keyframes shimmer {
       0% { transform: translateX(-150%) skewX(-20deg); }
       20%, 100% { transform: translateX(250%) skewX(-20deg); }
@@ -234,7 +238,7 @@
       pointer-events: none;
     }
 
-    /* 滾動進入視窗的平滑淡入上升動態 (Scroll Reveal) */
+    /* 滾動平滑淡入上升 */
     .reveal-on-scroll {
       opacity: 0;
       transform: translateY(24px);
@@ -246,7 +250,7 @@
       transform: translateY(0);
     }
 
-    /* 婚紗輪播相片電影級微縮放 */
+    /* 婚紗輪播相片微縮放 */
     .carousel-item {
       transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1), transform 1.4s cubic-bezier(0.25, 1, 0.5, 1);
     }
@@ -259,7 +263,7 @@
       transform: scale(1.03);
     }
 
-    /* 表單聚焦美化 */
+    /* 表單聚焦 */
     .form-input-focus:focus {
       border-color: #8A9A86;
       box-shadow: 0 0 0 3px rgba(138, 154, 134, 0.18);
@@ -268,15 +272,15 @@
 </head>
 <body class="relative">
 
-  <!-- 背景音樂：換上你的專屬高品質直連鋼琴曲 -->
-  <audio id="wedding-audio" loop preload="auto">
+  <!-- 背景音樂：Catbox 直連 mp3，加入 playsinline 與 webkit 支援 -->
+  <audio id="wedding-audio" loop preload="auto" playsinline webkit-playsinline>
     <source src="https://files.catbox.moe/5qy9jp.mp3" type="audio/mpeg">
   </audio>
 
   <!-- ========================================== -->
   <!-- 開函儀式感互動遮罩 (立體杏色信封) -->
   <!-- ========================================== -->
-  <div id="intro-overlay" class="fixed inset-0 z-50 flex items-center justify-center bg-black/65 backdrop-blur-xl px-4 transition-all duration-1000">
+  <div id="intro-overlay" class="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-xl px-4 transition-all duration-1000">
     <div class="w-full max-w-sm flex flex-col items-center select-none">
       
       <!-- 頂部引言 -->
@@ -292,17 +296,14 @@
         <!-- 信封底層背板 -->
         <div class="absolute inset-0 bg-[#decbb6] rounded-2xl shadow-2xl border border-[#cbb39b]/40"></div>
 
-        <!-- 內置邀請函卡片 (抽出後在此以優雅硬筆手寫書寫) -->
+        <!-- 內置邀請函卡片 -->
         <div id="inner-card" class="envelope-card absolute inset-x-2 top-2 bottom-2 bg-[#FCFAF7] rounded-xl p-3 sm:p-4 shadow-2xl border border-morandi-warm/30 flex flex-col items-center justify-center text-center overflow-hidden">
           <div class="w-full h-full border border-morandi-warm/35 rounded-lg p-2.5 sm:p-3 flex flex-col items-center justify-between bg-gradient-to-b from-white/95 to-[#FAF7F0]/95 relative overflow-hidden">
             <span class="font-cormorant text-[10px] tracking-[0.25em] text-[#C08C5D] uppercase font-semibold">Heartfelt Invitation</span>
             
-            <!-- 硬筆手寫書寫區域 (文青字體、精確置中、不溢出) -->
+            <!-- 硬筆手寫書寫區域 -->
             <div class="w-full flex items-center justify-center py-2 relative min-h-[38px]">
-              <div id="calligraphy-container" class="handwriting-writing-wrapper font-handwriting">
-                <!-- 由 JS 即時寫入清秀硬筆字體 -->
-              </div>
-              <!-- 金色游移鋼筆尖微光 -->
+              <div id="calligraphy-container" class="handwriting-writing-wrapper font-handwriting"></div>
               <div id="writing-cursor-dot"></div>
             </div>
 
@@ -360,7 +361,6 @@
     </a>
 
     <div class="flex items-center gap-3 sm:gap-6">
-      <!-- 平板與電腦端展開選單，手機端隱藏以保持乾淨大器 -->
       <div class="hidden md:flex items-center gap-6 text-xs text-morandi-dark/80 tracking-widest">
         <a href="#photo-section" class="hover:text-morandi-warm transition-colors py-1">幸福印記</a>
         <a href="#wedding-info-section" class="hover:text-morandi-warm transition-colors py-1">婚宴資訊</a>
@@ -389,44 +389,45 @@
   </div>
 
   <!-- ========================================== -->
-  <!-- 頁首 HERO 區域 (電影級微推鏡頭與呼吸感排版) -->
+  <!-- 頁首 HERO 區域 (手機端特化：大幅增加新人畫面可視度) -->
   <!-- ========================================== -->
-  <header class="relative w-full min-h-screen pt-20 pb-12 flex items-center justify-center text-white overflow-hidden">
-    <div 
-      class="absolute inset-0 bg-cover bg-center animate-ken-burns will-change-transform"
-      style="background-image: url('https://lh3.googleusercontent.com/d/18vuJz_o7W1Oay3QqiO5FVXf8KdiwCUr2');"
-    ></div>
+  <header class="relative w-full min-h-screen pt-16 sm:pt-20 pb-10 flex items-center justify-center text-white overflow-hidden">
+    <!-- 封面主圖：背景最佳化，新郎新娘全面完整呈現 -->
+    <div class="hero-bg-photo absolute inset-0 will-change-transform"></div>
 
-    <div class="absolute inset-0 bg-gradient-to-b from-black/50 via-black/25 to-black/70"></div>
+    <!-- 柔和微漸層：保留通透度並確保文字易讀性 -->
+    <div class="absolute inset-0 bg-gradient-to-b from-black/45 via-black/15 to-black/65"></div>
 
-    <div class="relative z-10 w-full max-w-xl mx-auto px-4 text-center flex flex-col items-center justify-between min-h-[82vh]">
+    <div class="relative z-10 w-full max-w-xl mx-auto px-4 text-center flex flex-col items-center justify-between min-h-[86vh] sm:min-h-[82vh]">
+      
       <!-- 頂部標語與新人姓名 -->
-      <div class="pt-6 sm:pt-10 flex flex-col items-center">
-        <p class="font-cormorant tracking-[0.35em] text-[11px] sm:text-xs uppercase text-white/90 font-medium mb-3 text-aura">
+      <div class="pt-4 sm:pt-8 flex flex-col items-center">
+        <p class="font-cormorant tracking-[0.35em] text-[10px] sm:text-xs uppercase text-white/90 font-medium mb-2 text-aura">
           YOU ARE MY GREATEST ADVENTURE
         </p>
 
-        <h1 class="font-cormorant text-3xl sm:text-5xl md:text-6xl font-normal tracking-wide drop-shadow-md text-white mb-2 text-aura-strong">
+        <h1 class="font-cormorant text-3xl sm:text-5xl md:text-6xl font-normal tracking-wide drop-shadow-md text-white mb-1.5 text-aura-strong">
           Yuren Fu <span class="italic font-serif text-[#DFC19D] font-light text-2xl sm:text-4xl">&</span> Yajing Ye
         </h1>
 
-        <div class="flex items-center justify-center gap-3 w-full my-1">
-          <div class="w-10 sm:w-14 h-[1px] bg-white/60"></div>
+        <div class="flex items-center justify-center gap-3 w-full my-0.5">
+          <div class="w-8 sm:w-14 h-[1px] bg-white/60"></div>
           <p class="font-serifTc text-base sm:text-xl font-medium tracking-[0.25em] text-white drop-shadow text-aura-strong">
             傅裕仁 <span class="text-[#DFC19D] mx-1 font-serif text-base sm:text-lg">&</span> 葉雅靜
           </p>
-          <div class="w-10 sm:w-14 h-[1px] bg-white/60"></div>
+          <div class="w-8 sm:w-14 h-[1px] bg-white/60"></div>
         </div>
 
-        <p class="font-serifTc text-xs sm:text-sm text-white/95 tracking-[0.22em] font-light mt-3 text-aura">
+        <p class="font-serifTc text-xs sm:text-sm text-white/95 tracking-[0.22em] font-light mt-2 text-aura">
           愛的下一頁，與我們一起見證
         </p>
       </div>
 
-      <!-- 中下部：精緻扁平磨砂膠囊 + 輕盈高透光顯眼導覽按鈕群 -->
-      <div class="w-full max-w-sm flex flex-col items-center space-y-3 pb-3">
-        <!-- 婚宴資訊資訊卡 (移除席設吉祥宴席，改為超扁平極致透光膠囊，不擋大景) -->
-        <div class="w-full rounded-2xl bg-black/30 backdrop-blur-md border border-white/20 px-4 py-2 shadow-xl text-center space-y-0.5">
+      <!-- 中下部：扁平磨砂膠囊 + 顯眼導覽按鈕 (完全不擋大景與雙手緊扣的溫馨細節) -->
+      <div class="w-full max-w-sm flex flex-col items-center space-y-2.5 pb-2">
+        
+        <!-- 婚宴資訊資訊膠囊 -->
+        <div class="w-full rounded-xl sm:rounded-2xl bg-black/35 backdrop-blur-md border border-white/20 px-3 py-2 shadow-xl text-center space-y-0.5">
           <p class="font-serifTc text-xs sm:text-sm font-medium tracking-widest text-white/95">
             2026 年 11 月 22 日（日）中午 12:30
           </p>
@@ -435,30 +436,30 @@
           </p>
         </div>
 
-        <!-- 封面三導覽按鈕：高透光磨砂、清晰醒目、完全不擋大景 -->
-        <div class="w-full grid grid-cols-3 gap-2 pt-0.5">
+        <!-- 封面三導覽按鈕 -->
+        <div class="w-full grid grid-cols-3 gap-2">
           <a 
             href="#photo-section" 
-            class="py-2 px-1 rounded-xl bg-black/25 hover:bg-black/40 active:scale-95 border border-white/30 backdrop-blur-md text-white text-[11px] sm:text-xs font-normal tracking-wider text-center transition-all duration-200 shadow-md flex items-center justify-center gap-1"
+            class="py-2 px-1 rounded-xl bg-black/30 hover:bg-black/45 active:scale-95 border border-white/35 backdrop-blur-md text-white text-[11px] sm:text-xs font-normal tracking-wider text-center transition-all duration-200 shadow-md flex items-center justify-center"
           >
             <span>幸福印記</span>
           </a>
           <a 
             href="#wedding-info-section" 
-            class="py-2 px-1 rounded-xl bg-black/25 hover:bg-black/40 active:scale-95 border border-white/30 backdrop-blur-md text-white text-[11px] sm:text-xs font-normal tracking-wider text-center transition-all duration-200 shadow-md flex items-center justify-center gap-1"
+            class="py-2 px-1 rounded-xl bg-black/30 hover:bg-black/45 active:scale-95 border border-white/35 backdrop-blur-md text-white text-[11px] sm:text-xs font-normal tracking-wider text-center transition-all duration-200 shadow-md flex items-center justify-center"
           >
             <span>婚宴資訊</span>
           </a>
           <a 
             href="#rsvp-section" 
-            class="shimmer-glow py-2 px-1 rounded-xl bg-[#C99867]/90 hover:bg-[#b58354] active:scale-95 border border-[#DFC19D]/60 backdrop-blur-md text-white text-[11px] sm:text-xs font-medium tracking-wider text-center transition-all duration-200 shadow-md flex items-center justify-center gap-1"
+            class="shimmer-glow py-2 px-1 rounded-xl bg-[#C99867]/90 hover:bg-[#b58354] active:scale-95 border border-[#DFC19D]/60 backdrop-blur-md text-white text-[11px] sm:text-xs font-medium tracking-wider text-center transition-all duration-200 shadow-md flex items-center justify-center"
           >
             <span>出席回函</span>
           </a>
         </div>
 
         <!-- 向下滑動提示 -->
-        <a href="#photo-section" class="inline-flex flex-col items-center text-white/70 hover:text-white transition-colors pt-1 group">
+        <a href="#photo-section" class="inline-flex flex-col items-center text-white/70 hover:text-white transition-colors pt-0.5 group">
           <span class="font-cormorant text-[9px] tracking-[0.25em] uppercase mb-0.5">Scroll to explore</span>
           <svg class="w-3.5 h-3.5 animate-bounce text-[#DFC19D]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
@@ -533,7 +534,7 @@
   </section>
 
   <!-- ========================================== -->
-  <!-- 順序 2：婚宴資訊 (層次分明卡片化排版 + 行事曆功能) -->
+  <!-- 順序 2：婚宴資訊 (層次分明卡片化排版) -->
   <!-- ========================================== -->
   <section id="wedding-info-section" class="py-16 sm:py-24 bg-morandi-sandlight px-4 border-y border-morandi-sand/40">
     <div class="max-w-3xl mx-auto space-y-6">
@@ -545,7 +546,7 @@
         <div class="w-12 h-[1px] bg-morandi-taupe/40 mx-auto mt-3"></div>
       </div>
 
-      <!-- 卡片 1: 主婚人 (高雅請柬卡片風格) -->
+      <!-- 卡片 1: 主婚人 (全宋體大器風格) -->
       <div class="reveal-on-scroll bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-morandi-sand/50">
         <div class="text-center mb-6">
           <span class="font-cormorant text-xs tracking-[0.25em] text-[#C08C5D] uppercase font-semibold">Parents of the Couple</span>
@@ -580,7 +581,7 @@
         </div>
       </div>
 
-      <!-- 卡片 2 & 3: 婚禮時間 + 宴會地點 (雙欄或響應式並列) -->
+      <!-- 卡片 2 & 3: 婚禮時間 + 宴會地點 -->
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
         
         <!-- 婚禮時間 -->
@@ -590,7 +591,6 @@
             <h3 class="font-serifTc text-lg font-medium text-morandi-dark tracking-wider mt-1 mb-2">婚禮時間</h3>
             <div class="w-8 h-[1px] bg-morandi-sand/80 mx-auto mb-4"></div>
 
-            <!-- 字體換成與下方星期日一致的 font-serifTc (Noto Serif TC 宋體) -->
             <p class="font-serifTc text-2xl sm:text-3xl font-semibold text-morandi-dark tracking-wider">2026.11.22</p>
             <p class="font-serifTc text-xs text-morandi-taupe tracking-widest mt-0.5">星期日 • 中午 12 : 30 開席</p>
           </div>
@@ -630,7 +630,7 @@
   </section>
 
   <!-- ========================================== -->
-  <!-- 順序 3：幸福倒數 (COUNTDOWN + 滾動浮現) -->
+  <!-- 順序 3：幸福倒數 (COUNTDOWN) -->
   <!-- ========================================== -->
   <section id="countdown-section" class="py-14 sm:py-20 bg-morandi-paper px-4 border-b border-morandi-sand/40">
     <div class="max-w-3xl mx-auto text-center">
@@ -667,7 +667,7 @@
   </section>
 
   <!-- ========================================== -->
-  <!-- 順序 4：出席回函 (RSVP FORM + 滾動浮現) -->
+  <!-- 順序 4：出席回函 (RSVP FORM) -->
   <!-- ========================================== -->
   <section id="rsvp-section" class="py-16 sm:py-24 bg-morandi-paper px-4">
     <div class="max-w-xl mx-auto">
@@ -758,7 +758,7 @@
             ></textarea>
           </div>
 
-          <!-- 送出按鈕 (光澤動效 + 點擊彈性) -->
+          <!-- 送出按鈕 -->
           <div class="pt-2">
             <button 
               type="button" 
@@ -804,7 +804,7 @@
   <!-- 互動腳本 (JS) -->
   <!-- ========================================== -->
   <script>
-    // 0. 高級紙質鋼筆書寫與真實抽紙滑動音效生成器 (Web Audio API 即時物理合成)
+    // 0. Web Audio API 合成器
     let audioCtx = null;
     function initAudioContext() {
       if (!audioCtx) {
@@ -818,19 +818,17 @@
       }
     }
 
-    // 真實厚磅紙張從信封中抽出的滑動沙沙聲 (Paper Draw / Pull-out Slide Sound)
+    // 抽紙滑動音效
     function playPaperSlideSound() {
       if (!audioCtx) return;
       try {
-        const duration = 0.72; // 放慢且延伸滑紙抽出的時間感
+        const duration = 0.72;
         const bufferSize = Math.floor(audioCtx.sampleRate * duration);
         const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
         const data = buffer.getChannelData(0);
 
-        // 模擬紙張抽拉時：先輕觸、漸強滑出、後段柔和提起的物理拋物線摩擦
         for (let i = 0; i < bufferSize; i++) {
           const t = i / bufferSize;
-          // 自然的摩擦包絡：前段漸升，中段持續沙沙摩擦，尾段溫和收音
           const envelope = Math.pow(Math.sin(Math.PI * t), 1.2) * (1 - 0.25 * t);
           data[i] = (Math.random() * 2 - 1) * envelope;
         }
@@ -838,7 +836,6 @@
         const noise = audioCtx.createBufferSource();
         noise.buffer = buffer;
 
-        // 雙濾波模擬紙張與紙質信封內壁的柔和低沉共鳴
         const filter = audioCtx.createBiquadFilter();
         filter.type = 'bandpass';
         filter.frequency.setValueAtTime(950, audioCtx.currentTime);
@@ -859,7 +856,7 @@
       } catch (e) {}
     }
 
-    // 模擬鋼筆劃過紙張時的逼真沙沙摩擦聲
+    // 鋼筆沙沙摩擦聲
     function playStrokeSound(durationMs = 90) {
       if (!audioCtx) return;
       try {
@@ -894,6 +891,45 @@
       } catch (e) {}
     }
 
+    // 溫和淡入播放婚禮音樂（寫完字後自然切入）
+    function startWeddingMusicWithFadeIn() {
+      const bgAudio = document.getElementById('wedding-audio');
+      const musicDiscInner = document.getElementById('music-disc-inner');
+      const musicStatusText = document.getElementById('music-status-text');
+      const playingIcon = document.getElementById('music-playing-icon');
+      const mutedIcon = document.getElementById('music-muted-icon');
+
+      if (!bgAudio) return;
+
+      bgAudio.currentTime = 0;
+      bgAudio.volume = 0;
+      const playPromise = bgAudio.play();
+
+      if (playPromise !== undefined) {
+        playPromise.then(() => {
+          if (musicDiscInner) musicDiscInner.classList.add('animate-spin-slow');
+          if (musicStatusText) musicStatusText.innerText = '音樂播放中';
+          if (playingIcon) playingIcon.classList.remove('hidden');
+          if (mutedIcon) mutedIcon.classList.add('hidden');
+
+          // 音量柔和淡入（0.8 秒平滑滑順過渡）
+          let vol = 0;
+          const fadeInterval = setInterval(() => {
+            vol += 0.05;
+            if (vol >= 1) {
+              bgAudio.volume = 1;
+              clearInterval(fadeInterval);
+            } else {
+              bgAudio.volume = vol;
+            }
+          }, 40);
+        }).catch((err) => {
+          console.warn('播放受阻，等待使用者手動開啟:', err);
+          if (musicStatusText) musicStatusText.innerText = '點擊播放音樂';
+        });
+      }
+    }
+
     // 1. 開函儀式與清秀硬筆手寫書寫動畫
     let isEnvelopeOpened = false;
 
@@ -901,66 +937,61 @@
       if (isEnvelopeOpened) return;
       isEnvelopeOpened = true;
 
+      // 在手勢事件當下喚醒 Web Audio API
       initAudioContext();
 
+      // 在使用者點擊當下取得手機瀏覽器（iOS/LINE）的音訊解鎖權限（先維持靜音，不干擾寫字聲）
       const bgAudio = document.getElementById('wedding-audio');
+      if (bgAudio) {
+        bgAudio.volume = 0;
+        const primePlay = bgAudio.play();
+        if (primePlay !== undefined) {
+          primePlay.then(() => {
+            bgAudio.pause();
+            bgAudio.currentTime = 0;
+          }).catch(() => {});
+        }
+      }
+
       const introOverlay = document.getElementById('intro-overlay');
       const envelopeWrapper = document.getElementById('envelope-wrapper');
       const waxSeal = document.getElementById('wax-seal');
-      const musicDiscInner = document.getElementById('music-disc-inner');
       const tapHint = document.getElementById('tap-seal-hint');
 
       if (tapHint) tapHint.style.opacity = '0';
-      
-      // 封蠟章柔和淡出
       waxSeal.classList.add('wax-seal-burst');
 
-      // 掀開信封翻蓋，並播放真實優雅的紙張抽出滑動聲
+      // 掀開信封翻蓋並播放抽紙聲音
       setTimeout(() => {
         playPaperSlideSound();
         envelopeWrapper.classList.add('envelope-open');
       }, 150);
 
-      // 配合放慢後的抽卡動作（1.45s），在卡片從容到位後才開始手寫書寫
+      // 卡片到位後開始手寫
       setTimeout(() => {
         startPenHandwriting(() => {
-          // 1. 書寫完畢後，新郎新娘姓名與日期平滑、自然慢速淡入（duration-1000）
+          // 【核心改變】文字寫完收筆瞬間，背景鋼琴曲柔和淡入播放！
+          startWeddingMusicWithFadeIn();
+
+          // 新郎新娘姓名自然淡入
           const coupleInfo = document.getElementById('card-couple-info');
           if (coupleInfo) {
             coupleInfo.classList.add('couple-info-reveal');
           }
 
-          // 2. 背景鋼琴音樂自然柔和淡入播放
-          if (bgAudio) {
-            bgAudio.currentTime = 0;
-            const playPromise = bgAudio.play();
-            if (playPromise !== undefined) {
-              playPromise.then(() => {
-                if (musicDiscInner) musicDiscInner.classList.add('animate-spin-slow');
-                const musicStatusText = document.getElementById('music-status-text');
-                if (musicStatusText) musicStatusText.innerText = '音樂播放中';
-              }).catch(err => {
-                console.warn('音訊自動播放被限制或需使用者手動點擊:', err);
-                // 提示可點擊右下角音樂膠囊
-                const musicStatusText = document.getElementById('music-status-text');
-                if (musicStatusText) musicStatusText.innerText = '點擊播放音樂';
-              });
-            }
-          }
-
-          // 3. 停留充裕時間（2.8秒），讓賓客能從容完整閱讀卡片上的文字與新人名
+          // 停留 2.6 秒供賓客沉浸在鋼琴旋律與文字中，隨後淡入主頁面
           setTimeout(() => {
             introOverlay.classList.add('envelope-fade-out');
             setTimeout(() => {
               introOverlay.style.display = 'none';
               initScrollReveal();
-            }, 1400); // 配合 1.4 秒平滑溶解過渡
-          }, 2800);
+            }, 1300);
+          }, 2600);
         });
       }, 1480);
     }
 
-    // 清秀鋼筆逐字落筆書寫動畫（結合游標與沙沙摩擦聲）
+    // 逐字落筆動畫
     function startPenHandwriting(onComplete) {
       const container = document.getElementById('calligraphy-container');
       const cursorDot = document.getElementById('writing-cursor-dot');
@@ -999,7 +1030,6 @@
         const el = charElements[idx];
         const char = text[idx];
 
-        // 計算游標精準位置
         try {
           const cardRect = container.parentElement.getBoundingClientRect();
           const charRect = el.getBoundingClientRect();
@@ -1009,16 +1039,12 @@
           cursorDot.style.top = `${targetY}px`;
         } catch (e) {}
 
-        // 書寫音效
         const duration = char === '，' ? 70 : 130;
         playStrokeSound(duration);
 
-        // 墨水落紙顯現
         el.classList.add('written');
-
         idx++;
 
-        // 節奏：逗號留白停頓，一般文字流暢書寫
         const nextDelay = char === '，' ? 300 : 170;
         setTimeout(writeNextChar, nextDelay);
       }
@@ -1026,7 +1052,7 @@
       setTimeout(writeNextChar, 150);
     }
 
-    // 音樂開關
+    // 音樂手動開關
     function toggleAudio() {
       const audio = document.getElementById('wedding-audio');
       const playingIcon = document.getElementById('music-playing-icon');
@@ -1057,7 +1083,7 @@
       }
     }
 
-    // 2. 婚禮倒數計時器邏輯
+    // 2. 婚禮倒數計時器
     function updateCountdown() {
       const weddingDate = new Date('2026-11-22T12:30:00+08:00').getTime();
       const now = new Date().getTime();
@@ -1085,7 +1111,7 @@
     setInterval(updateCountdown, 1000);
     updateCountdown();
 
-    // 3. 婚紗相簿輪播 (微縮放 + 電影交叉淡入淡出 + 觸控滑動支援)
+    // 3. 婚紗相簿輪播
     let currentSlide = 0;
     const slides = document.querySelectorAll('.carousel-item');
     const dots = document.querySelectorAll('.indicator-dot');
@@ -1127,7 +1153,7 @@
       slideInterval = setInterval(nextSlide, 4800);
     }
 
-    // 觸控手勢滑動監聽 (Touch Swipe for Mobile)
+    // 觸控手勢滑動
     const touchArea = document.getElementById('carousel-touch-area');
     if (touchArea) {
       let touchStartX = 0;
@@ -1139,26 +1165,20 @@
 
       touchArea.addEventListener('touchend', (e) => {
         touchEndX = e.changedTouches[0].screenX;
-        handleSwipe();
-      }, { passive: true });
-
-      function handleSwipe() {
         const threshold = 45;
         if (touchEndX < touchStartX - threshold) {
-          // 向左滑 -> 下一張
           clearInterval(slideInterval);
           nextSlide();
           slideInterval = setInterval(nextSlide, 4800);
         } else if (touchEndX > touchStartX + threshold) {
-          // 向右滑 -> 上一張
           clearInterval(slideInterval);
           prevSlide();
           slideInterval = setInterval(nextSlide, 4800);
         }
-      }
+      }, { passive: true });
     }
 
-    // 4. 平滑滾動浮現監聽 (Scroll Reveal via IntersectionObserver)
+    // 4. 平滑滾動浮現
     function initScrollReveal() {
       const revealElements = document.querySelectorAll('.reveal-on-scroll');
       if ('IntersectionObserver' in window) {
@@ -1180,7 +1200,7 @@
       }
     }
 
-    // 5. 單次提交機制 (精確送出 1 筆至 Google 試算表)
+    // 5. 單次提交表單至 Google 試算表
     let isSubmitting = false;
 
     async function executeSingleSubmit() {
