@@ -2,7 +2,7 @@
 <html lang="zh-TW" class="scroll-smooth">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>傅裕仁 & 葉雅靜 婚禮邀請函 | Wedding Invitation</title>
   
   <!-- Tailwind CSS CDN -->
@@ -197,7 +197,7 @@
       animation: spin-slow 8s linear infinite;
     }
 
-    /* 手機直立螢幕極致優化：露出更多新人畫面，不裁切人物兩側 */
+    /* 手機直立螢幕優化：露出新人畫面，不裁切人物兩側 */
     .hero-bg-photo {
       background-image: url('https://lh3.googleusercontent.com/d/18vuJz_o7W1Oay3QqiO5FVXf8KdiwCUr2');
       background-repeat: no-repeat;
@@ -206,10 +206,15 @@
     }
     @media (max-width: 640px) {
       .hero-bg-photo {
-        /* 手機直螢幕比例最佳化：適度縮小放大倍率，讓左右兩側的新郎與新娘完整入鏡 */
-        background-position: center 30%;
-        background-size: 125% auto;
+        background-position: center 26%;
+        background-size: 126% auto;
       }
+    }
+
+    /* 手機高規格動態視窗高度適配 */
+    .hero-container-height {
+      min-height: 100vh;
+      min-height: 100dvh;
     }
 
     /* 按鈕珍珠微光掠過動畫 (Shimmer Effect) */
@@ -373,9 +378,9 @@
   </nav>
 
   <!-- ========================================== -->
-  <!-- 常駐背景音樂播放膠囊 -->
+  <!-- 常駐背景音樂播放膠囊 (抬高位置，避免與手機底欄重疊) -->
   <!-- ========================================== -->
-  <div id="music-disc-btn" onclick="toggleAudio()" class="fixed bottom-6 right-5 sm:right-7 z-40 cursor-pointer flex items-center gap-2.5 bg-white/95 backdrop-blur-md px-3.5 py-2 rounded-full shadow-lg border border-black/5 hover:scale-105 active:scale-95 transition-all duration-300">
+  <div id="music-disc-btn" onclick="toggleAudio()" class="fixed bottom-7 sm:bottom-6 right-4 sm:right-7 z-40 cursor-pointer flex items-center gap-2.5 bg-white/95 backdrop-blur-md px-3.5 py-2 rounded-full shadow-lg border border-black/5 hover:scale-105 active:scale-95 transition-all duration-300">
     <div id="music-disc-inner" class="w-7 h-7 rounded-full bg-[#C99867] text-white flex items-center justify-center shrink-0">
       <svg id="music-playing-icon" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path>
@@ -389,24 +394,24 @@
   </div>
 
   <!-- ========================================== -->
-  <!-- 頁首 HERO 區域 (手機端特化：大幅增加新人畫面可視度) -->
+  <!-- 頁首 HERO 區域 (手機端動態高度適配，將底部元件往上拉提) -->
   <!-- ========================================== -->
-  <header class="relative w-full min-h-screen pt-16 sm:pt-20 pb-10 flex items-center justify-center text-white overflow-hidden">
+  <header class="relative w-full hero-container-height pt-14 sm:pt-20 pb-16 sm:pb-10 flex items-center justify-center text-white overflow-hidden">
     <!-- 封面主圖：背景最佳化，新郎新娘全面完整呈現 -->
     <div class="hero-bg-photo absolute inset-0 will-change-transform"></div>
 
     <!-- 柔和微漸層：保留通透度並確保文字易讀性 -->
     <div class="absolute inset-0 bg-gradient-to-b from-black/45 via-black/15 to-black/65"></div>
 
-    <div class="relative z-10 w-full max-w-xl mx-auto px-4 text-center flex flex-col items-center justify-between min-h-[86vh] sm:min-h-[82vh]">
+    <div class="relative z-10 w-full max-w-xl mx-auto px-4 text-center flex flex-col items-center justify-between h-full py-4 sm:py-6">
       
-      <!-- 頂部標語與新人姓名 -->
-      <div class="pt-4 sm:pt-8 flex flex-col items-center">
-        <p class="font-cormorant tracking-[0.35em] text-[10px] sm:text-xs uppercase text-white/90 font-medium mb-2 text-aura">
+      <!-- 頂部標語與新人姓名 (適度縮減邊距，留出畫面空間) -->
+      <div class="pt-2 sm:pt-6 flex flex-col items-center">
+        <p class="font-cormorant tracking-[0.35em] text-[10px] sm:text-xs uppercase text-white/90 font-medium mb-1.5 text-aura">
           YOU ARE MY GREATEST ADVENTURE
         </p>
 
-        <h1 class="font-cormorant text-3xl sm:text-5xl md:text-6xl font-normal tracking-wide drop-shadow-md text-white mb-1.5 text-aura-strong">
+        <h1 class="font-cormorant text-3xl sm:text-5xl md:text-6xl font-normal tracking-wide drop-shadow-md text-white mb-1 text-aura-strong">
           Yuren Fu <span class="italic font-serif text-[#DFC19D] font-light text-2xl sm:text-4xl">&</span> Yajing Ye
         </h1>
 
@@ -418,13 +423,13 @@
           <div class="w-8 sm:w-14 h-[1px] bg-white/60"></div>
         </div>
 
-        <p class="font-serifTc text-xs sm:text-sm text-white/95 tracking-[0.22em] font-light mt-2 text-aura">
+        <p class="font-serifTc text-xs sm:text-sm text-white/95 tracking-[0.22em] font-light mt-1.5 text-aura">
           愛的下一頁，與我們一起見證
         </p>
       </div>
 
-      <!-- 中下部：扁平磨砂膠囊 + 顯眼導覽按鈕 (完全不擋大景與雙手緊扣的溫馨細節) -->
-      <div class="w-full max-w-sm flex flex-col items-center space-y-2.5 pb-2">
+      <!-- 中下部：扁平磨砂膠囊 + 顯眼導覽按鈕 (往上拉提，完全避開手機底部工具列) -->
+      <div class="w-full max-w-sm flex flex-col items-center space-y-2.5 pb-6 sm:pb-3">
         
         <!-- 婚宴資訊資訊膠囊 -->
         <div class="w-full rounded-xl sm:rounded-2xl bg-black/35 backdrop-blur-md border border-white/20 px-3 py-2 shadow-xl text-center space-y-0.5">
@@ -440,27 +445,27 @@
         <div class="w-full grid grid-cols-3 gap-2">
           <a 
             href="#photo-section" 
-            class="py-2 px-1 rounded-xl bg-black/30 hover:bg-black/45 active:scale-95 border border-white/35 backdrop-blur-md text-white text-[11px] sm:text-xs font-normal tracking-wider text-center transition-all duration-200 shadow-md flex items-center justify-center"
+            class="py-2.5 sm:py-2 px-1 rounded-xl bg-black/30 hover:bg-black/45 active:scale-95 border border-white/35 backdrop-blur-md text-white text-[11px] sm:text-xs font-normal tracking-wider text-center transition-all duration-200 shadow-md flex items-center justify-center"
           >
             <span>幸福印記</span>
           </a>
           <a 
             href="#wedding-info-section" 
-            class="py-2 px-1 rounded-xl bg-black/30 hover:bg-black/45 active:scale-95 border border-white/35 backdrop-blur-md text-white text-[11px] sm:text-xs font-normal tracking-wider text-center transition-all duration-200 shadow-md flex items-center justify-center"
+            class="py-2.5 sm:py-2 px-1 rounded-xl bg-black/30 hover:bg-black/45 active:scale-95 border border-white/35 backdrop-blur-md text-white text-[11px] sm:text-xs font-normal tracking-wider text-center transition-all duration-200 shadow-md flex items-center justify-center"
           >
             <span>婚宴資訊</span>
           </a>
           <a 
             href="#rsvp-section" 
-            class="shimmer-glow py-2 px-1 rounded-xl bg-[#C99867]/90 hover:bg-[#b58354] active:scale-95 border border-[#DFC19D]/60 backdrop-blur-md text-white text-[11px] sm:text-xs font-medium tracking-wider text-center transition-all duration-200 shadow-md flex items-center justify-center"
+            class="shimmer-glow py-2.5 sm:py-2 px-1 rounded-xl bg-[#C99867]/90 hover:bg-[#b58354] active:scale-95 border border-[#DFC19D]/60 backdrop-blur-md text-white text-[11px] sm:text-xs font-medium tracking-wider text-center transition-all duration-200 shadow-md flex items-center justify-center"
           >
             <span>出席回函</span>
           </a>
         </div>
 
-        <!-- 向下滑動提示 -->
-        <a href="#photo-section" class="inline-flex flex-col items-center text-white/70 hover:text-white transition-colors pt-0.5 group">
-          <span class="font-cormorant text-[9px] tracking-[0.25em] uppercase mb-0.5">Scroll to explore</span>
+        <!-- 向下滑動提示 (往上拉提，清晰可見) -->
+        <a href="#photo-section" class="inline-flex flex-col items-center text-white/75 hover:text-white transition-colors pt-1 group">
+          <span class="font-cormorant text-[10px] tracking-[0.25em] uppercase mb-0.5">Scroll to explore</span>
           <svg class="w-3.5 h-3.5 animate-bounce text-[#DFC19D]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
           </svg>
@@ -804,8 +809,9 @@
   <!-- 互動腳本 (JS) -->
   <!-- ========================================== -->
   <script>
-    // 0. Web Audio API 合成器
+    // 0. Web Audio API 用於合成抽紙聲與寫字聲
     let audioCtx = null;
+
     function initAudioContext() {
       try {
         if (!audioCtx) {
@@ -895,7 +901,7 @@
       } catch (e) {}
     }
 
-    // 寫完字後播放婚禮音樂（解除靜音並順暢開播）
+    // 寫完字後，音樂從頭開始順暢播放
     function startWeddingMusicWithFadeIn() {
       const bgAudio = document.getElementById('wedding-audio');
       const musicDiscInner = document.getElementById('music-disc-inner');
@@ -906,8 +912,12 @@
       if (!bgAudio) return;
 
       try {
+        // 解除靜音，回到最開頭
         bgAudio.muted = false;
-        bgAudio.currentTime = 0;
+        try {
+          bgAudio.currentTime = 0;
+        } catch (e) {}
+
         const playPromise = bgAudio.play();
         if (playPromise !== undefined) {
           playPromise.then(() => {
@@ -932,24 +942,23 @@
       if (isEnvelopeOpened) return;
       isEnvelopeOpened = true;
 
-      // 1. 喚醒 Web Audio API
+      // 1. 喚醒 Web Audio（用於抽紙聲與寫字聲）
       initAudioContext();
 
-      // 2. 於使用者點擊當下取得手機/iOS系統授權（設定 muted 徹底防止一開始大聲）
-      try {
-        const bgAudio = document.getElementById('wedding-audio');
-        if (bgAudio) {
+      // 2. 在使用者點擊的這一個瞬間，以 muted = true 取得手機（iOS Safari/LINE）的播放授權
+      // muted = true 既保證 100% 絕對無聲（絕不大聲嚇到人），又能完全通過手機的用戶手勢驗證！
+      const bgAudio = document.getElementById('wedding-audio');
+      if (bgAudio) {
+        try {
           bgAudio.muted = true;
           const p = bgAudio.play();
           if (p !== undefined) {
-            p.catch(() => {});
+            p.catch(err => console.warn('預授權播放提示:', err));
           }
-        }
-      } catch (err) {
-        console.warn('授權佔位執行完畢:', err);
+        } catch (err) {}
       }
 
-      // 3. UI 破蠟與信封展開動效（絕對執行）
+      // 3. UI 破蠟與信封展開動效
       const introOverlay = document.getElementById('intro-overlay');
       const envelopeWrapper = document.getElementById('envelope-wrapper');
       const waxSeal = document.getElementById('wax-seal');
@@ -967,7 +976,7 @@
       // 卡片到位後開始手寫
       setTimeout(() => {
         startPenHandwriting(() => {
-          // 文字題畢收筆後，背景鋼琴曲悠揚響起！
+          // 文字題畢收筆後，解除靜音，音樂從頭響起！
           startWeddingMusicWithFadeIn();
 
           // 新郎新娘姓名自然淡入
@@ -976,7 +985,7 @@
             coupleInfo.classList.add('couple-info-reveal');
           }
 
-          // 停留 2.6 秒供賓客沉浸在鋼琴旋律與文字中，隨後淡入主頁面
+          // 停留供賓客品味，隨後淡入主頁面
           setTimeout(() => {
             if (introOverlay) introOverlay.classList.add('envelope-fade-out');
             setTimeout(() => {
@@ -1106,7 +1115,7 @@
 
       const days = Math.floor(distance / (1000 * 60 * 60 * 24));
       const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const minutes = Math.floor((distance % (1000 * 60)) / (1000 * 60));
       const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
       daysEl.innerText = String(days).padStart(2, '0');
