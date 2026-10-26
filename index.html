@@ -206,9 +206,9 @@
     }
     @media (max-width: 640px) {
       .hero-bg-photo {
-        /* 手機直螢幕讓寬度完全舒展，聚焦於兩人牽手的中央偏上方視覺黃金點 */
-        background-position: center 28%;
-        background-size: 165% auto;
+        /* 手機直螢幕比例最佳化：適度縮小放大倍率，讓左右兩側的新郎與新娘完整入鏡 */
+        background-position: center 30%;
+        background-size: 125% auto;
       }
     }
 
@@ -291,7 +291,7 @@
       </div>
 
       <!-- 立體信封本體 -->
-      <div id="envelope-wrapper" class="relative w-[300px] sm:w-[320px] h-[210px] perspective-1000 cursor-pointer group" onclick="openEnvelope()">
+      <div id="envelope-wrapper" class="relative w-[300px] sm:w-[320px] h-[210px] perspective-1000 cursor-pointer group" onclick="openEnvelope()" role="button" aria-label="點擊開啟邀請函">
         
         <!-- 信封底層背板 -->
         <div class="absolute inset-0 bg-[#decbb6] rounded-2xl shadow-2xl border border-[#cbb39b]/40"></div>
@@ -330,7 +330,7 @@
         </div>
 
         <!-- 古銅金火漆封蠟章 -->
-        <div id="wax-seal" class="absolute top-[56%] left-1/2 -translate-x-1/2 -translate-y-1/2 z-40 wax-seal-glow w-14 h-14 rounded-full bg-gradient-to-br from-[#c9955e] via-[#b37a44] to-[#82542a] p-1 flex items-center justify-center transition-transform duration-300 group-hover:scale-105 shadow-xl border-2 border-[#e6b885]/40">
+        <div id="wax-seal" class="absolute top-[56%] left-1/2 -translate-x-1/2 -translate-y-1/2 z-40 wax-seal-glow w-14 h-14 rounded-full bg-gradient-to-br from-[#c9955e] via-[#b37a44] to-[#82542a] p-1 flex items-center justify-center transition-transform duration-300 group-hover:scale-105 shadow-xl border-2 border-[#e6b885]/40 pointer-events-none">
           <div class="w-full h-full rounded-full border border-[#f3d1a8]/60 flex flex-col items-center justify-center text-center bg-gradient-to-tr from-[#9c6936] to-[#c28c52] shadow-inner p-1">
             <span class="font-cormorant font-bold text-xs tracking-wider text-[#fff4e8] drop-shadow-sm">Y & Y</span>
           </div>
@@ -339,7 +339,7 @@
       </div>
 
       <!-- 底部輕觸提示 -->
-      <div id="tap-seal-hint" class="mt-9 flex flex-col items-center space-y-1.5 animate-pulse drop-shadow-md transition-opacity duration-300">
+      <div id="tap-seal-hint" class="mt-9 flex flex-col items-center space-y-1.5 animate-pulse drop-shadow-md transition-opacity duration-300 pointer-events-none">
         <p class="font-cormorant text-sm tracking-[0.28em] text-[#DFC19D] uppercase font-semibold">Tap Seal To Open</p>
         <p class="font-serifTc text-sm text-white tracking-widest flex items-center gap-2 font-normal">
           <span>輕觸封蠟開啟喜帖</span>
@@ -807,14 +807,18 @@
     // 0. Web Audio API 合成器
     let audioCtx = null;
     function initAudioContext() {
-      if (!audioCtx) {
-        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-        if (AudioContextClass) {
-          audioCtx = new AudioContextClass();
+      try {
+        if (!audioCtx) {
+          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+          if (AudioContextClass) {
+            audioCtx = new AudioContextClass();
+          }
         }
-      }
-      if (audioCtx && audioCtx.state === 'suspended') {
-        audioCtx.resume();
+        if (audioCtx && audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+      } catch (e) {
+        console.warn('AudioContext 初始化略過:', e);
       }
     }
 
@@ -876,11 +880,11 @@
 
         const filter = audioCtx.createBiquadFilter();
         filter.type = 'bandpass';
-        filter.frequency.setValueAtTime(2600 + Math.random() * 400, audioCtx.currentTime);
-        filter.Q.setValueAtTime(2.8, audioCtx.currentTime);
+        filter.frequency.setValueAtTime(2700 + Math.random() * 300, audioCtx.currentTime);
+        filter.Q.setValueAtTime(2.6, audioCtx.currentTime);
 
         const gainNode = audioCtx.createGain();
-        gainNode.gain.setValueAtTime(0.045, audioCtx.currentTime);
+        gainNode.gain.setValueAtTime(0.065, audioCtx.currentTime);
         gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
 
         noise.connect(filter);
@@ -891,7 +895,7 @@
       } catch (e) {}
     }
 
-    // 溫和淡入播放婚禮音樂（寫完字後自然切入）
+    // 寫完字後播放婚禮音樂（解除靜音並順暢開播）
     function startWeddingMusicWithFadeIn() {
       const bgAudio = document.getElementById('wedding-audio');
       const musicDiscInner = document.getElementById('music-disc-inner');
@@ -901,32 +905,23 @@
 
       if (!bgAudio) return;
 
-      bgAudio.currentTime = 0;
-      bgAudio.volume = 0;
-      const playPromise = bgAudio.play();
-
-      if (playPromise !== undefined) {
-        playPromise.then(() => {
-          if (musicDiscInner) musicDiscInner.classList.add('animate-spin-slow');
-          if (musicStatusText) musicStatusText.innerText = '音樂播放中';
-          if (playingIcon) playingIcon.classList.remove('hidden');
-          if (mutedIcon) mutedIcon.classList.add('hidden');
-
-          // 音量柔和淡入（0.8 秒平滑滑順過渡）
-          let vol = 0;
-          const fadeInterval = setInterval(() => {
-            vol += 0.05;
-            if (vol >= 1) {
-              bgAudio.volume = 1;
-              clearInterval(fadeInterval);
-            } else {
-              bgAudio.volume = vol;
-            }
-          }, 40);
-        }).catch((err) => {
-          console.warn('播放受阻，等待使用者手動開啟:', err);
-          if (musicStatusText) musicStatusText.innerText = '點擊播放音樂';
-        });
+      try {
+        bgAudio.muted = false;
+        bgAudio.currentTime = 0;
+        const playPromise = bgAudio.play();
+        if (playPromise !== undefined) {
+          playPromise.then(() => {
+            if (musicDiscInner) musicDiscInner.classList.add('animate-spin-slow');
+            if (musicStatusText) musicStatusText.innerText = '音樂播放中';
+            if (playingIcon) playingIcon.classList.remove('hidden');
+            if (mutedIcon) mutedIcon.classList.add('hidden');
+          }).catch(e => {
+            console.warn('播放被攔截，可由右下角手動開啟:', e);
+            if (musicStatusText) musicStatusText.innerText = '點擊播放音樂';
+          });
+        }
+      } catch (e) {
+        console.warn('啟動音樂錯誤:', e);
       }
     }
 
@@ -937,40 +932,42 @@
       if (isEnvelopeOpened) return;
       isEnvelopeOpened = true;
 
-      // 在手勢事件當下喚醒 Web Audio API
+      // 1. 喚醒 Web Audio API
       initAudioContext();
 
-      // 在使用者點擊當下取得手機瀏覽器（iOS/LINE）的音訊解鎖權限（先維持靜音，不干擾寫字聲）
-      const bgAudio = document.getElementById('wedding-audio');
-      if (bgAudio) {
-        bgAudio.volume = 0;
-        const primePlay = bgAudio.play();
-        if (primePlay !== undefined) {
-          primePlay.then(() => {
-            bgAudio.pause();
-            bgAudio.currentTime = 0;
-          }).catch(() => {});
+      // 2. 於使用者點擊當下取得手機/iOS系統授權（設定 muted 徹底防止一開始大聲）
+      try {
+        const bgAudio = document.getElementById('wedding-audio');
+        if (bgAudio) {
+          bgAudio.muted = true;
+          const p = bgAudio.play();
+          if (p !== undefined) {
+            p.catch(() => {});
+          }
         }
+      } catch (err) {
+        console.warn('授權佔位執行完畢:', err);
       }
 
+      // 3. UI 破蠟與信封展開動效（絕對執行）
       const introOverlay = document.getElementById('intro-overlay');
       const envelopeWrapper = document.getElementById('envelope-wrapper');
       const waxSeal = document.getElementById('wax-seal');
       const tapHint = document.getElementById('tap-seal-hint');
 
       if (tapHint) tapHint.style.opacity = '0';
-      waxSeal.classList.add('wax-seal-burst');
+      if (waxSeal) waxSeal.classList.add('wax-seal-burst');
 
       // 掀開信封翻蓋並播放抽紙聲音
       setTimeout(() => {
         playPaperSlideSound();
-        envelopeWrapper.classList.add('envelope-open');
+        if (envelopeWrapper) envelopeWrapper.classList.add('envelope-open');
       }, 150);
 
       // 卡片到位後開始手寫
       setTimeout(() => {
         startPenHandwriting(() => {
-          // 【核心改變】文字寫完收筆瞬間，背景鋼琴曲柔和淡入播放！
+          // 文字題畢收筆後，背景鋼琴曲悠揚響起！
           startWeddingMusicWithFadeIn();
 
           // 新郎新娘姓名自然淡入
@@ -981,9 +978,9 @@
 
           // 停留 2.6 秒供賓客沉浸在鋼琴旋律與文字中，隨後淡入主頁面
           setTimeout(() => {
-            introOverlay.classList.add('envelope-fade-out');
+            if (introOverlay) introOverlay.classList.add('envelope-fade-out');
             setTimeout(() => {
-              introOverlay.style.display = 'none';
+              if (introOverlay) introOverlay.style.display = 'none';
               initScrollReveal();
             }, 1300);
           }, 2600);
@@ -1015,13 +1012,13 @@
         charElements.push(span);
       }
 
-      cursorDot.style.opacity = '1';
+      if (cursorDot) cursorDot.style.opacity = '1';
       let idx = 0;
 
       function writeNextChar() {
         if (idx >= charElements.length) {
           setTimeout(() => {
-            cursorDot.style.opacity = '0';
+            if (cursorDot) cursorDot.style.opacity = '0';
             if (onComplete) onComplete();
           }, 350);
           return;
@@ -1035,8 +1032,10 @@
           const charRect = el.getBoundingClientRect();
           const targetX = (charRect.left - cardRect.left) + charRect.width * 0.75;
           const targetY = (charRect.top - cardRect.top) + charRect.height * 0.8;
-          cursorDot.style.left = `${targetX}px`;
-          cursorDot.style.top = `${targetY}px`;
+          if (cursorDot) {
+            cursorDot.style.left = `${targetX}px`;
+            cursorDot.style.top = `${targetY}px`;
+          }
         } catch (e) {}
 
         const duration = char === '，' ? 70 : 130;
@@ -1062,7 +1061,8 @@
 
       if (!audio) return;
 
-      if (audio.paused) {
+      if (audio.paused || audio.muted) {
+        audio.muted = false;
         const playPromise = audio.play();
         if (playPromise !== undefined) {
           playPromise.then(() => {
@@ -1089,11 +1089,18 @@
       const now = new Date().getTime();
       const distance = weddingDate - now;
 
+      const daysEl = document.getElementById('days');
+      const hoursEl = document.getElementById('hours');
+      const minutesEl = document.getElementById('minutes');
+      const secondsEl = document.getElementById('seconds');
+
+      if (!daysEl || !hoursEl || !minutesEl || !secondsEl) return;
+
       if (distance < 0) {
-        document.getElementById('days').innerText = '00';
-        document.getElementById('hours').innerText = '00';
-        document.getElementById('minutes').innerText = '00';
-        document.getElementById('seconds').innerText = '00';
+        daysEl.innerText = '00';
+        hoursEl.innerText = '00';
+        minutesEl.innerText = '00';
+        secondsEl.innerText = '00';
         return;
       }
 
@@ -1102,10 +1109,10 @@
       const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
       const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-      document.getElementById('days').innerText = String(days).padStart(2, '0');
-      document.getElementById('hours').innerText = String(hours).padStart(2, '0');
-      document.getElementById('minutes').innerText = String(minutes).padStart(2, '0');
-      document.getElementById('seconds').innerText = String(seconds).padStart(2, '0');
+      daysEl.innerText = String(days).padStart(2, '0');
+      hoursEl.innerText = String(hours).padStart(2, '0');
+      minutesEl.innerText = String(minutes).padStart(2, '0');
+      secondsEl.innerText = String(seconds).padStart(2, '0');
     }
 
     setInterval(updateCountdown, 1000);
@@ -1138,11 +1145,13 @@
     }
 
     function nextSlide() {
+      if (!slides.length) return;
       const next = (currentSlide + 1) % slides.length;
       showSlide(next);
     }
 
     function prevSlide() {
+      if (!slides.length) return;
       const prev = (currentSlide - 1 + slides.length) % slides.length;
       showSlide(prev);
     }
