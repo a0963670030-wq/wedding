@@ -203,13 +203,17 @@
       background-repeat: no-repeat;
       background-position: center 25% !important;
       background-size: cover !important;
+      transform: translateZ(0);
+      -webkit-transform: translateZ(0);
+      will-change: transform;
     }
 
-    /* 手機高規格動態視窗高度適配：嚴格貼齊 100dvh，消滅一切灰色空隙 */
+    /* 解決手機滑動時 Safari 工具列縮放導致的圖片抖動放大與頓感 */
     .hero-container-height {
       height: 100vh;
-      height: 100dvh;
-      max-height: 100dvh;
+      height: 100svh;
+      min-height: -webkit-fill-available;
+      overflow: hidden;
     }
 
     /* 按鈕珍珠微光掠過動畫 (Shimmer Effect) */
@@ -895,7 +899,7 @@
       } catch (e) {}
     }
 
-    // 寫完字後，背景音樂啟動播放
+    // 寫完字後，背景音樂啟動播放（修正函式名稱與播放邏輯）
     function startWeddingMusic() {
       const bgAudio = document.getElementById('wedding-audio');
       const musicDiscInner = document.getElementById('music-disc-inner');
@@ -907,6 +911,7 @@
 
       try {
         bgAudio.muted = false;
+        bgAudio.volume = 1.0;
         try {
           bgAudio.currentTime = 0;
         } catch (e) {}
