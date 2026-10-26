@@ -803,8 +803,10 @@
   <!-- 互動腳本 (JS) -->
   <!-- ========================================== -->
   <script>
-    // 0. Web Audio API 用於合成抽紙聲與寫字聲
+    // 0. Web Audio API 用於合成抽紙聲、寫字聲，以及「突破 iOS 音量限制」的硬體級音量放大器
     let audioCtx = null;
+    let bgAudioSourceNode = null;
+    let bgAudioGainNode = null;
 
     function initAudioContext() {
       try {
@@ -816,6 +818,20 @@
         }
         if (audioCtx && audioCtx.state === 'suspended') {
           audioCtx.resume();
+        }
+
+        // 將 <audio> 標籤接入 Web Audio API 的 GainNode（音量控制節點）
+        // 這是唯一能在 iPhone/Safari 上實現真實 1% -> 100% 平滑漸大音量的方法！
+        const bgAudio = document.getElementById('wedding-audio');
+        if (audioCtx && bgAudio && !bgAudioSourceNode) {
+          bgAudioSourceNode = audioCtx.createMediaElementSource(bgAudio);
+          bgAudioGainNode = audioCtx.createGain();
+          
+          // 初始設為 1% (0.01)
+          bgAudioGainNode.gain.setValueAtTime(0.01, audioCtx.currentTime);
+          
+          bgAudioSourceNode.connect(bgAudioGainNode);
+          bgAudioGainNode.connect(audioCtx.destination);
         }
       } catch (e) {
         console.warn('AudioContext 初始化略過:', e);
@@ -895,41 +911,27 @@
       } catch (e) {}
     }
 
-    // 平滑漸進式放大音樂音量 (從 1% 漸變到 100%)
-    let volumeFadeTimer = null;
-    function smoothFadeVolume(targetVolume, durationMs) {
-      const bgAudio = document.getElementById('wedding-audio');
-      if (!bgAudio) return;
-
-      if (volumeFadeTimer) {
-        clearInterval(volumeFadeTimer);
-        volumeFadeTimer = null;
+    // 硬體級平滑音量漸變：100% 繞過 iOS 不支援 audio.volume 的硬體限制
+    function smoothFadeVolume(targetGain, durationSec) {
+      if (audioCtx && bgAudioGainNode) {
+        try {
+          const now = audioCtx.currentTime;
+          bgAudioGainNode.gain.cancelScheduledValues(now);
+          // 確保起始值不為 0（指數漸變需大於 0）
+          const currentGain = Math.max(bgAudioGainNode.gain.value, 0.01);
+          bgAudioGainNode.gain.setValueAtTime(currentGain, now);
+          bgAudioGainNode.gain.exponentialRampToValueAtTime(targetGain, now + durationSec);
+          return;
+        } catch (e) {
+          console.warn('Web Audio gain fade error:', e);
+        }
       }
 
-      const startVolume = bgAudio.volume;
-      const stepInterval = 50; // 每 50ms 更新一次音量
-      const totalSteps = Math.max(Math.floor(durationMs / stepInterval), 1);
-      const volumeDelta = (targetVolume - startVolume) / totalSteps;
-      let currentStep = 0;
-
-      volumeFadeTimer = setInterval(() => {
-        currentStep++;
-        let nextVol = startVolume + (volumeDelta * currentStep);
-        if (nextVol > 1) nextVol = 1;
-        if (nextVol < 0) nextVol = 0;
-        
-        try {
-          bgAudio.volume = nextVol;
-        } catch (e) {}
-
-        if (currentStep >= totalSteps) {
-          clearInterval(volumeFadeTimer);
-          volumeFadeTimer = null;
-          try {
-            bgAudio.volume = targetVolume;
-          } catch (e) {}
-        }
-      }, stepInterval);
+      // 非 iOS 或一般瀏覽器的標準 fallback
+      const bgAudio = document.getElementById('wedding-audio');
+      if (bgAudio) {
+        bgAudio.volume = targetGain;
+      }
     }
 
     // 1. 開函儀式與清秀硬筆手寫書寫動畫
@@ -939,20 +941,23 @@
       if (isEnvelopeOpened) return;
       isEnvelopeOpened = true;
 
-      // 1. 喚醒 Web Audio（用於抽紙聲與寫字聲）
+      // 1. 喚醒 Web Audio 並綁定音量硬體節點（支援 iPhone 實時音量調控）
       initAudioContext();
 
-      // 2. 點擊瞬間以 1% (0.01) 溫和音量啟動播放，取得 iOS 完整播放權限且不突兀
+      // 2. 點擊瞬間以 1% (0.01) 極其微弱音量啟動播放（iOS 授權成功，且絕不大聲）
       const bgAudio = document.getElementById('wedding-audio');
       const musicDiscInner = document.getElementById('music-disc-inner');
       const musicStatusText = document.getElementById('music-status-text');
       const playingIcon = document.getElementById('music-playing-icon');
       const mutedIcon = document.getElementById('music-muted-icon');
 
+      if (bgAudioGainNode && audioCtx) {
+        bgAudioGainNode.gain.setValueAtTime(0.01, audioCtx.currentTime);
+      }
+
       if (bgAudio) {
         try {
           bgAudio.muted = false;
-          bgAudio.volume = 0.01; // 從 1% 開始
           try {
             bgAudio.currentTime = 0;
           } catch (e) {}
@@ -987,10 +992,10 @@
         if (envelopeWrapper) envelopeWrapper.classList.add('envelope-open');
       }, 150);
 
-      // 卡片到位後開始手寫，並在寫字期間平滑將音量自 1% 放大至 100%
+      // 卡片抽出到位後，開始手寫，並在手寫過程中讓音樂極其自然地從 1% 放大至 100%
       setTimeout(() => {
-        // 在手寫進行的 2.5 秒期間，自然平滑放大音量至 100%
-        smoothFadeVolume(1.0, 2500);
+        // 在手寫進行的 2.8 秒期間，以指數曲線絲滑放大至 1.0 (100%)
+        smoothFadeVolume(1.0, 2.8);
 
         startPenHandwriting(() => {
           // 新郎新娘姓名自然淡入
