@@ -803,10 +803,8 @@
   <!-- 互動腳本 (JS) -->
   <!-- ========================================== -->
   <script>
-    // 0. Web Audio API 用於合成抽紙聲、寫字聲，以及「突破 iOS 音量限制」的硬體級音量放大器
+    // 0. Web Audio API 僅用於合成抽紙聲與鋼筆沙沙聲（完全在本地合成，無 CORS 跨域問題）
     let audioCtx = null;
-    let bgAudioSourceNode = null;
-    let bgAudioGainNode = null;
 
     function initAudioContext() {
       try {
@@ -818,20 +816,6 @@
         }
         if (audioCtx && audioCtx.state === 'suspended') {
           audioCtx.resume();
-        }
-
-        // 將 <audio> 標籤接入 Web Audio API 的 GainNode（音量控制節點）
-        // 這是唯一能在 iPhone/Safari 上實現真實 1% -> 100% 平滑漸大音量的方法！
-        const bgAudio = document.getElementById('wedding-audio');
-        if (audioCtx && bgAudio && !bgAudioSourceNode) {
-          bgAudioSourceNode = audioCtx.createMediaElementSource(bgAudio);
-          bgAudioGainNode = audioCtx.createGain();
-          
-          // 初始設為 1% (0.01)
-          bgAudioGainNode.gain.setValueAtTime(0.01, audioCtx.currentTime);
-          
-          bgAudioSourceNode.connect(bgAudioGainNode);
-          bgAudioGainNode.connect(audioCtx.destination);
         }
       } catch (e) {
         console.warn('AudioContext 初始化略過:', e);
@@ -911,26 +895,36 @@
       } catch (e) {}
     }
 
-    // 硬體級平滑音量漸變：100% 繞過 iOS 不支援 audio.volume 的硬體限制
-    function smoothFadeVolume(targetGain, durationSec) {
-      if (audioCtx && bgAudioGainNode) {
-        try {
-          const now = audioCtx.currentTime;
-          bgAudioGainNode.gain.cancelScheduledValues(now);
-          // 確保起始值不為 0（指數漸變需大於 0）
-          const currentGain = Math.max(bgAudioGainNode.gain.value, 0.01);
-          bgAudioGainNode.gain.setValueAtTime(currentGain, now);
-          bgAudioGainNode.gain.exponentialRampToValueAtTime(targetGain, now + durationSec);
-          return;
-        } catch (e) {
-          console.warn('Web Audio gain fade error:', e);
-        }
-      }
-
-      // 非 iOS 或一般瀏覽器的標準 fallback
+    // 寫完字後，背景音樂啟動播放
+    function startWeddingMusic() {
       const bgAudio = document.getElementById('wedding-audio');
-      if (bgAudio) {
-        bgAudio.volume = targetGain;
+      const musicDiscInner = document.getElementById('music-disc-inner');
+      const musicStatusText = document.getElementById('music-status-text');
+      const playingIcon = document.getElementById('music-playing-icon');
+      const mutedIcon = document.getElementById('music-muted-icon');
+
+      if (!bgAudio) return;
+
+      try {
+        bgAudio.muted = false;
+        try {
+          bgAudio.currentTime = 0;
+        } catch (e) {}
+
+        const playPromise = bgAudio.play();
+        if (playPromise !== undefined) {
+          playPromise.then(() => {
+            if (musicDiscInner) musicDiscInner.classList.add('animate-spin-slow');
+            if (musicStatusText) musicStatusText.innerText = '音樂播放中';
+            if (playingIcon) playingIcon.classList.remove('hidden');
+            if (mutedIcon) mutedIcon.classList.add('hidden');
+          }).catch(e => {
+            console.warn('播放被攔截，可由右下角手動開啟:', e);
+            if (musicStatusText) musicStatusText.innerText = '點擊播放音樂';
+          });
+        }
+      } catch (e) {
+        console.warn('啟動音樂錯誤:', e);
       }
     }
 
@@ -941,38 +935,17 @@
       if (isEnvelopeOpened) return;
       isEnvelopeOpened = true;
 
-      // 1. 喚醒 Web Audio 並綁定音量硬體節點（支援 iPhone 實時音量調控）
+      // 1. 喚醒 Web Audio（用於抽紙與寫字聲音）
       initAudioContext();
 
-      // 2. 點擊瞬間以 1% (0.01) 極其微弱音量啟動播放（iOS 授權成功，且絕不大聲）
+      // 2. 在點擊瞬間以 muted = true 取得 iOS 系統合法音訊播放資格
       const bgAudio = document.getElementById('wedding-audio');
-      const musicDiscInner = document.getElementById('music-disc-inner');
-      const musicStatusText = document.getElementById('music-status-text');
-      const playingIcon = document.getElementById('music-playing-icon');
-      const mutedIcon = document.getElementById('music-muted-icon');
-
-      if (bgAudioGainNode && audioCtx) {
-        bgAudioGainNode.gain.setValueAtTime(0.01, audioCtx.currentTime);
-      }
-
       if (bgAudio) {
         try {
-          bgAudio.muted = false;
-          try {
-            bgAudio.currentTime = 0;
-          } catch (e) {}
-
+          bgAudio.muted = true;
           const p = bgAudio.play();
           if (p !== undefined) {
-            p.then(() => {
-              if (musicDiscInner) musicDiscInner.classList.add('animate-spin-slow');
-              if (musicStatusText) musicStatusText.innerText = '音樂播放中';
-              if (playingIcon) playingIcon.classList.remove('hidden');
-              if (mutedIcon) mutedIcon.classList.add('hidden');
-            }).catch(err => {
-              console.warn('播放被攔截，可手動點擊右下角按鈕:', err);
-              if (musicStatusText) musicStatusText.innerText = '點擊播放音樂';
-            });
+            p.catch(err => console.warn('iOS 預授權已觸發:', err));
           }
         } catch (err) {}
       }
@@ -992,12 +965,12 @@
         if (envelopeWrapper) envelopeWrapper.classList.add('envelope-open');
       }, 150);
 
-      // 卡片抽出到位後，開始手寫，並在手寫過程中讓音樂極其自然地從 1% 放大至 100%
+      // 卡片到位後開始手寫
       setTimeout(() => {
-        // 在手寫進行的 2.8 秒期間，以指數曲線絲滑放大至 1.0 (100%)
-        smoothFadeVolume(1.0, 2.8);
-
         startPenHandwriting(() => {
+          // 寫字完畢收筆瞬間：解除靜音，音樂從頭響起！
+          startWeddingMusic();
+
           // 新郎新娘姓名自然淡入
           const coupleInfo = document.getElementById('card-couple-info');
           if (coupleInfo) {
